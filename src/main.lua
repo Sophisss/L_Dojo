@@ -1,36 +1,22 @@
 local sempai_function = require("sempai")
 local table_function = require("init")
 local utility_function = require("utility")
+local file_function = require ("file")
 
--- leggi la configurazione dal file
-local file = io.open("config.lua", "r")
-local content = file:read("*all")
-file:close()
-
--- converte la stringa letta dal file in una tabella Lua -- rivedi
-local config = load(content)()
-
--- inizializzazione della scacchiera
-local board = table_function.inizialize(config.N)
-
--- Popolamento della scacchiera con i simboli e assegnazione delle coordinate ai sempai
-table_function.insert(config.D, board)
-
--- Stampa la configurazione iniziale
-table_function.print(board, config.N)
 
 
 --Funzione che fa muovere i sempai
-local function moveSempai (board, count)
+local function moveSempai (b, count)
     --Ottieni le posizioni dei sempai
-    local position_sempai = sempai_function.searchSempai(board)
+    local position_sempai = sempai_function.searchSempai(b)
 
     -- Ottieni le direzioni generate dalla funzione playGong
-    local gongDirections = utility_function.playGong(board)
+    local gongDirections = utility_function.playGong(b)
+
 
 
     -- Crea una nuova scacchiera con i sempai mossi nella direzione corrispondente
-    local newBoard = board
+    local newBoard = table_function.clone(b) -- Copia la scacchiera
 
     for i, direction in ipairs(gongDirections) do
         local sempaiX, sempaiY = table.unpack(position_sempai[i]) -- Ottieni le coordinate del sempai
@@ -48,7 +34,7 @@ local function moveSempai (board, count)
     end
 
     -- Stampa la nuova configurazione della scacchiera nel file
-    table_function.print(newBoard, config.N)
+    table_function.print(newBoard, #b)
 
     if count < 4 then
         -- Richiama ricorsivamente la funzione per il prossimo movimento
@@ -57,8 +43,21 @@ local function moveSempai (board, count)
 end
 
 
--- Avvia il movimento dei sempai
-moveSempai(board, 1)
+local function playGame()
+    local configContent =file_function.readConfigFromFile("config.lua")
+    local board, config = file_function.initializeGame(configContent)
+
+    -- Stampa la configurazione iniziale
+    table_function.print(board, config.N)
+
+    -- Avvia il movimento dei sempai
+    moveSempai(board, 1)
+
+end
+
+playGame()
+
+
 
 
 
