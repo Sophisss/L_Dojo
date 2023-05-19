@@ -110,5 +110,23 @@ function U.calculateDistance(objectX, objectY, sempaiX, sempaiY)
     return math.sqrt((objectX - sempaiX) ^ 2 + (objectY - sempaiY) ^ 2)
 end
 
+function U.countObjects(board)
+    local objectCount = 0
+
+    for x = 1, #board do
+        for y = 1, #board[x] do
+            if type(board[x][y]) ~= "table" or board[x][y] ~= 'S' then
+                if board[x][y] == 'U' or board[x][y] == 'C' or board[x][y] == 'G' or board[x][y] == 'R' then
+                    objectCount = objectCount + 1
+                end
+            end
+        end
+    end
+
+    print(objectCount)
+    return objectCount
+end
+
+
 
 return U
