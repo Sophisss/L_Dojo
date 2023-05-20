@@ -107,7 +107,9 @@ local function playGong(board)
     for i=1, numSempai do
 
         -- Ottieni le coordinate del sempai
-        local sempaiX, sempaiY = table.unpack(position_sempai[i])
+        local sempai = position_sempai[i]
+
+        local sempaiX, sempaiY = sempai.posizione.x, sempai.posizione.y
 
         --Oggetto più vicino al sempai dato
         local objectX, objectY = nearestObjectFunction(objects, sempaiX, sempaiY)

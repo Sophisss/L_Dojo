@@ -38,7 +38,7 @@ local function moveSempai(board, x, y, dx, dy)
     newSempai.posizione.x = newX
     newSempai.posizione.y = newY
 
-    return newBoard
+    return newBoard, newSempai
 
 end
 
@@ -49,7 +49,7 @@ local function moveNord(board, x, y)
     end
 
     -- Restituisci la tabella originale se il sempai non può essere spostato verso nord
-    return board
+    return board, board[x][y]
 end
 
 local function moveSud(board, x, y)
@@ -58,7 +58,7 @@ local function moveSud(board, x, y)
     end
 
     -- Restituisci la tabella originale se il sempai non può essere spostato verso nord
-    return board
+    return board, board[x][y]
 end
 
 local function moveEst(board, x, y)
@@ -68,7 +68,7 @@ local function moveEst(board, x, y)
     end
 
     -- Restituisci la tabella originale se il sempai non può essere spostato verso nord
-    return board
+    return board, board[x][y]
 
 end
 
@@ -78,7 +78,7 @@ local function moveOvest(board, x, y)
     end
 
     -- Restituisci la tabella originale se il sempai non può essere spostato verso nord
-    return board
+    return board, board[x][y]
 end
 
 
@@ -89,7 +89,7 @@ end
 
 -- Funzione per calcolare la priorità di un Sempai in caso di parità di punteggio
 local function priority(sempai)
-    return ((sempai.posizione[1] + sempai.posizione[2]) * (sempai.posizione[1] + sempai.posizione[2] - 1) / 2) + sempai.posizione[1] - sempai.posizione[2]
+    return (((sempai.posizione.x + sempai.posizione.y) * ((sempai.posizione.x + sempai.posizione.y) - 1))/ 2) + sempai.posizione.x - sempai.posizione.y
 end
 
 
@@ -112,18 +112,20 @@ end
 
 --Funzione che cerca i sempai e memorizza la loro posizione
 local function searchSempai(board)
-    local sempaiCoordinates = {}  -- Tabella per memorizzare le coordinate dei sempai
+    local sempaiList = {}
 
-    -- Trova le coordinate dei sempai
+    -- Trova i sempai nella tabella
     for i = 1, #board do
         for j = 1, #board[i] do
             if type(board[i][j]) == "table" or board[i][j] == "S" then
-                table.insert(sempaiCoordinates, { i, j })
+                table.insert(sempaiList, board[i][j])
             end
         end
     end
-    return sempaiCoordinates
+
+    return sempaiList
 end
+
 
 local function printSempai(sempai)
     print("Coraggio: " .. sempai.coraggio ..
