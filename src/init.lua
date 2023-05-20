@@ -1,7 +1,5 @@
-local T = {}
-
 --Funzione che crea il sempai
-function T.create(x,y)
+local function create(x,y)
     local sempai = {
         umilta = 0,
         coraggio = 0,
@@ -13,7 +11,7 @@ function T.create(x,y)
 end
 
 --Funzione che inizializza la scacchiera
-function T.inizialize(N)
+local function inizialize(N)
     local board = {}
     for i = 1, N do
         board[i] = {}
@@ -25,25 +23,45 @@ function T.inizialize(N)
 end
 
 
+--Funzione che serve per clonare in profondità la schacchiera
+local function clone (t)
+    local new_table = {}
+    for k, v in pairs(t) do
+        if type(v) == "table" then
+            new_table[k] = clone(v)
+        else
+            new_table[k] = v
+        end
+    end
+    return new_table
+end
+
+
 --Funzione che inserisce i simboli nella scacchiera
-function T.insert(D, board)
+local function insert(D, board)
+
+    local newBoard = clone(board)
+
     for symbol, position in pairs(D) do
         for i = 1, #position do
             local x, y = position[i][1], position[i][2]
 
             if symbol == 'S' then
-                local newSempai = T.create(x, y)
-                board[x][y] = newSempai
+                local newSempai = create(x, y)
+                newBoard[x][y] = newSempai
             else
-                board[x][y] = symbol
+                newBoard[x][y] = symbol
             end
         end
     end
+
+    return newBoard
+
 end
 
 
 --Funzione che stampa la scacchiera
-function T.print(board, N)
+local function print(board, N)
     local filename = "output.txt"
     local file_output = io.open(filename, "a")
 
@@ -62,18 +80,14 @@ function T.print(board, N)
 end
 
 
---Funzione che serve per clonare in profondità la schacchiera
-function T.clone (t)
-    local new_table = {}
-    for k, v in pairs(t) do
-        if type(v) == "table" then
-            new_table[k] = T.clone(v)
-        else
-            new_table[k] = v
-        end
-    end
-    return new_table
-end
+
+local T = {
+    create = create,
+    inizialize = inizialize,
+    insert = insert,
+    print = print,
+    clone = clone
+}
 
 
 return T

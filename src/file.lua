@@ -1,10 +1,8 @@
 local table_function = require("init")
 
-local F = {}
-
 
 -- leggi la configurazione dal file
-function F.readConfigFromFile(filename)
+local function readConfigFromFile(filename)
     local file = io.open(filename, "r")
     local content = file:read("*all")
     file:close()
@@ -13,18 +11,21 @@ function F.readConfigFromFile(filename)
 end
 
 
-function F. initializeGame(configContent)
+local function initializeGame(configContent)
     local config = load(configContent)()
 
     -- inizializzazione della scacchiera
     local board = table_function.inizialize(config.N)
 
     -- Popolamento della scacchiera con i simboli e assegnazione delle coordinate ai sempai
-    table_function.insert(config.D, board)
+    local newBoard = table_function.insert(config.D, board)
 
-    return board, config
+    return newBoard, config
 end
 
-
+local F = {
+    readConfigFromFile = readConfigFromFile,
+    initializeGame = initializeGame
+}
 
 return F
