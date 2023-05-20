@@ -38,7 +38,7 @@ local function moveSempai(board, x, y, dx, dy)
     newSempai.posizione.x = newX
     newSempai.posizione.y = newY
 
-    return newBoard, newSempai
+    return newBoard
 
 end
 
@@ -49,7 +49,7 @@ local function moveNord(board, x, y)
     end
 
     -- Restituisci la tabella originale se il sempai non può essere spostato verso nord
-    return board, board[x][y]
+    return board
 end
 
 local function moveSud(board, x, y)
@@ -58,7 +58,7 @@ local function moveSud(board, x, y)
     end
 
     -- Restituisci la tabella originale se il sempai non può essere spostato verso nord
-    return board, board[x][y]
+    return board
 end
 
 local function moveEst(board, x, y)
@@ -68,7 +68,7 @@ local function moveEst(board, x, y)
     end
 
     -- Restituisci la tabella originale se il sempai non può essere spostato verso nord
-    return board, board[x][y]
+    return board
 
 end
 
@@ -78,7 +78,7 @@ local function moveOvest(board, x, y)
     end
 
     -- Restituisci la tabella originale se il sempai non può essere spostato verso nord
-    return board, board[x][y]
+    return board
 end
 
 
