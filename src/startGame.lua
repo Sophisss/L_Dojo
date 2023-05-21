@@ -2,14 +2,81 @@ local sempai_function = require("sempai")
 local utility_function = require("utility")
 local table_function = require("init")
 local war_function = require("war")
+local init_function = require("init")
+
+
+local function deleteEqualsSumSempai(sempai1, sempai2, board, N)
+    local newBoard = init_function.clone(board)
+
+    local deleteSempai = war_function.calculatePriority(sempai1, sempai2)
+
+     newBoard = war_function.deleteSempai(newBoard, deleteSempai, N)
+
+    return newBoard
+
+end
+
+
+
+local function compareSempai(board, tot_sempai, N)
+    local newBoard = init_function.clone(board)
+    local maxSum = 0
+    local finalSempai
+
+
+    for i = 1, #tot_sempai do
+        local sum = sempai_function.sum(tot_sempai[i])
+
+        if sum > maxSum then
+            maxSum = sum
+            finalSempai = tot_sempai[i]
+        elseif sum < maxSum then
+            newBoard = war_function.deleteSempai(newBoard, tot_sempai[i], N)
+            elseif sum == maxSum then
+            newBoard = deleteEqualsSumSempai(tot_sempai[i], finalSempai, newBoard, N)
+        end
+    end
+
+    return newBoard
+end
+
+
+
+local function endGame(board, N)
+
+    local newBoard = init_function.clone(board)
+
+    local tot_sempai = sempai_function.searchSempai(newBoard)
+
+    if #tot_sempai == 1 then
+
+        print("Programma terminato")
+
+    elseif #tot_sempai > 1 then
+
+        newBoard = compareSempai(newBoard, tot_sempai, N)
+        endGame(newBoard, N)
+
+    else
+        print("Errore")
+
+    end
+
+    return newBoard
+
+end
+
+
+
 
 --Funzione che fa muovere i sempai
-local function moveSempai (b, count, N)
+local function moveSempai (b, N)
 
     -- Crea una nuova scacchiera con i sempai mossi nella direzione corrispondente
     local newBoard = table_function.clone(b) -- Copia la scacchiera
 
     local num = utility_function.countObjects(newBoard)
+
 
     if num > 0 then
 
@@ -22,8 +89,8 @@ local function moveSempai (b, count, N)
 
         for i, direction in ipairs(gongDirections) do
             local newSempai = table_function.clone(position_sempai[i])
-            local sempai = newSempai
-            local sempaiX, sempaiY = sempai.posizione.x, sempai.posizione.y -- Ottieni le coordinate del sempai
+            local sempaiX, sempaiY = newSempai.posizione.x, newSempai.posizione.y -- Ottieni le coordinate del sempai
+            print(sempaiX, sempaiY)
 
             -- Sposta ciascun sempai nella direzione determinata
             if direction == "Nord" then
@@ -35,21 +102,22 @@ local function moveSempai (b, count, N)
             elseif direction == "Ovest" then
                 newBoard, newSempai = sempai_function.moveOvest(newBoard, sempaiX, sempaiY)
             end
-
-            newBoard = war_function.comparison(newBoard, newSempai, N)
-
         end
 
-        -- Stampa la nuova configurazione della scacchiera nel file
-        table_function.print(newBoard, #b)
-        moveSempai(newBoard, count + 1, N)
+        table_function.print(newBoard, #newBoard)
+
+        newBoard = war_function.comparison(newBoard)
+
+        moveSempai(newBoard, N)
 
     else
 
-        print("Programma terminato")
-    end
-end
+        newBoard = endGame(newBoard, N)
+        init_function.print(newBoard, N)
 
+    end
+
+end
 
 local START = {
     moveSempai = moveSempai
