@@ -67,6 +67,17 @@ local function endGame(board, N)
 end
 
 
+local function printSempai (board)
+
+    local position_sempai = sempai_function.searchSempai(board)
+
+    for i=1, #position_sempai do
+        sempai_function.printSempai(position_sempai[i])
+    end
+
+end
+
+
 
 
 --Funzione che fa muovere i sempai
@@ -105,6 +116,7 @@ local function moveSempai (b, N)
         end
 
         table_function.print(newBoard, #newBoard)
+        printSempai(newBoard)
 
         newBoard = war_function.comparison(newBoard)
 
@@ -114,6 +126,7 @@ local function moveSempai (b, N)
 
         newBoard = endGame(newBoard, N)
         init_function.print(newBoard, N)
+        printSempai(newBoard)
 
     end
 
