@@ -20,6 +20,8 @@ local function initializeGame(configContent)
     -- Popolamento della scacchiera con i simboli e assegnazione delle coordinate ai sempai
     local newBoard = table_function.insert(config.D, board)
 
+    table_function.print(newBoard, config.N)
+
     return newBoard, config
 end
 
