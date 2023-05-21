@@ -11,19 +11,36 @@ local function readConfigFromFile(filename)
 end
 
 
+-- inizializza la scacchiera
+local function initializeBoard(N)
+    return table_function.inizialize(N)
+end
+
+
+-- stampa la scacchiera
+local function printBoard(board, N)
+    table_function.print(board, N)
+end
+
+
+-- inserisci i simboli nella scacchiera
+local function insertSymbols(D, board)
+    return table_function.insert(D, board)
+end
+
+
+-- inizializza il gioco
 local function initializeGame(configContent)
     local config = load(configContent)()
 
-    -- inizializzazione della scacchiera
-    local board = table_function.inizialize(config.N)
+    local board = initializeBoard(config.N)
+    local newBoard = insertSymbols(config.D, board)
 
-    -- Popolamento della scacchiera con i simboli e assegnazione delle coordinate ai sempai
-    local newBoard = table_function.insert(config.D, board)
-
-    table_function.print(newBoard, config.N)
+    printBoard(newBoard, config.N)
 
     return newBoard, config
 end
+
 
 local F = {
     readConfigFromFile = readConfigFromFile,
