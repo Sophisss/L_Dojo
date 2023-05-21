@@ -3,12 +3,9 @@ local table_function = require("init")
 
 -- leggi la configurazione dal file
 local function readConfigFromFile(filename)
-    local file = io.open(filename, "r")
-    local content = file:read("*all")
-    file:close()
-
-    return content
+    return dofile(filename)
 end
+
 
 
 -- inizializza la scacchiera
@@ -31,14 +28,13 @@ end
 
 -- inizializza il gioco
 local function initializeGame(configContent)
-    local config = load(configContent)()
 
-    local board = initializeBoard(config.N)
-    local newBoard = insertSymbols(config.D, board)
+    local board = initializeBoard(configContent.N)
+    local newBoard = insertSymbols(configContent.D, board)
 
-    printBoard(newBoard, config.N)
+    printBoard(newBoard, configContent.N)
 
-    return newBoard, config
+    return newBoard, configContent
 end
 
 
