@@ -1,6 +1,3 @@
-local sempai_function = require("sempai")
-
-
 -- Funzione per ottenere la lista degli oggetti presenti sulla scacchiera
 local function getObjectList(board)
     local objects = {}
@@ -17,22 +14,6 @@ local function getObjectList(board)
     end
 
     return objects, num_object
-end
-
-local function countObjects(board)
-    local objectCount = 0
-
-    for x = 1, #board do
-        for y = 1, #board[x] do
-            if type(board[x][y]) ~= "table" or board[x][y] ~= 'S' then
-                if board[x][y] == 'U' or board[x][y] == 'C' or board[x][y] == 'G' or board[x][y] == 'R' then
-                    objectCount = objectCount + 1
-                end
-            end
-        end
-    end
-
-    return objectCount
 end
 
 
@@ -83,42 +64,28 @@ local function minPath(startX, startY, endX, endY)
     return direction
 end
 
-local function playGong(board)
+local function playGong(board, sempaiX, sempaiY)
 
-    --Conto il numero totale di sempai presenti
-    local numSempai = sempai_function.countSempai(board)
-
-    --Determino le posizioni di questi sempai
-    local position_sempai = sempai_function.searchSempai(board)
 
     --Determino l'elenco degli oggetti nella scacchiera
     local objects, _ = getObjectList(board)
 
-    local gongDirections = {}
+    local direction
 
-    for i = 1, numSempai do
 
-        -- Ottieni le coordinate del sempai
-        local sempai = position_sempai[i]
+    --Oggetto più vicino al sempai dato
+    local objectX, objectY = nearestObjectFunction(objects, sempaiX, sempaiY)
 
-        local sempaiX, sempaiY = sempai.posizione.x, sempai.posizione.y
+    local move = minPath(sempaiX, sempaiY, objectX, objectY)
 
-        --Oggetto più vicino al sempai dato
-        local objectX, objectY = nearestObjectFunction(objects, sempaiX, sempaiY)
+    direction = move
 
-        local direction = minPath(sempaiX, sempaiY, objectX, objectY)
-
-        gongDirections[i] = direction
-
-    end
-
-    return gongDirections
+    return direction
 
 end
 
 local U = {
     getObjectList = getObjectList,
-    countObjects = countObjects,
     calculateDistance = calculateDistance,
     nearestObjectFunction = nearestObjectFunction,
     minPath = minPath,

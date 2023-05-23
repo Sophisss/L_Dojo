@@ -33,7 +33,7 @@ local function compareSempai(board, tot_sempai, N)
     local finalSempai
 
     for i = 1, #tot_sempai do
-        local sum = sempai_function.sum(tot_sempai[i])
+        local sum = war_function.sum(tot_sempai[i])
 
         if sum > maxSum then
             if finalSempai == nil then
@@ -64,22 +64,6 @@ local function compareSempai(board, tot_sempai, N)
     return newBoard
 end
 
-local function endGame(board, N)
-
-    local newBoard = init_function.clone(board)
-
-    local tot_sempai = sempai_function.searchSempai(newBoard)
-
-    if #tot_sempai > 1 then
-
-        newBoard = compareSempai(newBoard, tot_sempai, N)
-
-    end
-
-    return newBoard
-
-end
-
 
 
 
@@ -89,43 +73,48 @@ local function moveSempai (b, N)
     -- Crea una nuova scacchiera con i sempai mossi nella direzione corrispondente
     local newBoard = table_function.clone(b) -- Copia la scacchiera
 
-    local num = utility_function.countObjects(newBoard)
+    local _, num = utility_function.getObjectList(newBoard)
+
+    local numSempai = sempai_function.countSempai(newBoard)
 
     printSempai(newBoard)
 
-    if num > 0 then
+    if numSempai ~= 1 then
 
         --Ottieni le posizioni dei sempai
-        local position_sempai = sempai_function.searchSempai(b)
+        local position_sempai = sempai_function.searchSempai(newBoard)
 
-        -- Ottieni le direzioni generate dalla funzione playGong
-        local gongDirections = utility_function.playGong(b)
+        if num ~= 0 then
 
-        for i, direction in ipairs(gongDirections) do
-            local newSempai = table_function.clone(position_sempai[i])
-            local sempaiX, sempaiY = newSempai.posizione.x, newSempai.posizione.y -- Ottieni le coordinate del sempai
+            for i=1, #position_sempai do
 
-            -- Sposta ciascun sempai nella direzione determinata
-            if direction == "Nord" then
-                newBoard = sempai_function.moveNord(newBoard, sempaiX, sempaiY)
-            elseif direction == "Sud" then
-                newBoard = sempai_function.moveSud(newBoard, sempaiX, sempaiY)
-            elseif direction == "Est" then
-                newBoard = sempai_function.moveEst(newBoard, sempaiX, sempaiY)
-            elseif direction == "Ovest" then
-                newBoard = sempai_function.moveOvest(newBoard, sempaiX, sempaiY)
+                local newSempai = table_function.clone(position_sempai[i])
+                local sempaiX, sempaiY = newSempai.posizione.x, newSempai.posizione.y -- Ottieni le coordinate del sempai
+
+                local direction = utility_function.playGong(newBoard, sempaiX, sempaiY)
+
+                -- Sposta ciascun sempai nella direzione determinata
+                if direction == "Nord" then
+                    newBoard = sempai_function.moveNord(newBoard, sempaiX, sempaiY)
+                elseif direction == "Sud" then
+                    newBoard = sempai_function.moveSud(newBoard, sempaiX, sempaiY)
+                elseif direction == "Est" then
+                    newBoard = sempai_function.moveEst(newBoard, sempaiX, sempaiY)
+                elseif direction == "Ovest" then
+                    newBoard = sempai_function.moveOvest(newBoard, sempaiX, sempaiY)
+                end
             end
+
+            table_function.print(newBoard, #newBoard)
+
+            moveSempai(newBoard, N)
+
         end
-
-        table_function.print(newBoard, #newBoard)
-
-        newBoard = war_function.comparison(newBoard)
-
-        moveSempai(newBoard, N)
 
     else
 
-        newBoard = endGame(newBoard, N)
+        print("Programma terminato!")
+
 
     end
 

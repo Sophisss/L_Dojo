@@ -1,7 +1,7 @@
 local init_function = require("init")
+local war_function = require("war")
 
-local function moveSempai(board, x, y, dx, dy)
-
+local function moveSempai (board, x, y, dx, dy)
 
     --Clona la tabella
     local newBoard = init_function.clone(board)
@@ -9,40 +9,69 @@ local function moveSempai(board, x, y, dx, dy)
     --Clona il sempai
     local newSempai = init_function.clone(newBoard[x][y])
 
+
     --Determina le nuove coordinate
     local newX = x + dx
     local newY = y + dy
 
-    -- Verifica se la nuova posizione è valida e se è presente un sempai
-    if newX >= 1 and newX <= 10 and newY >= 1 and newY <= 10 and
-            (newBoard[newX][newY] ~= '-' and (type(newBoard[newX][newY]) ~= "table" or newBoard[newX][newY] ~= 'S')) then
+    if newX >= 1 and newY >= 1 and newX <= 10 and newY <= 10 then
 
-        -- Aggiorna i valori del sempai in base all'elemento speciale trovato
-        if newBoard[newX][newY] == 'U' then
-            newSempai.umilta = newSempai.umilta + 1
-        elseif newBoard[newX][newY] == 'C' then
-            newSempai.coraggio = newSempai.coraggio + 1
-        elseif newBoard[newX][newY] == 'R' then
-            newSempai.rispetto = newSempai.rispetto + 1
-        elseif newBoard[newX][newY] == 'G' then
-            newSempai.gentilezza = newSempai.gentilezza + 1
+        if newBoard[newX][newY] ~= '-' then
+
+            if type(newBoard[newX][newY]) ~= "table" or newBoard[newX][newY] ~= 'S' then
+
+                -- Aggiorna i valori del sempai in base all'elemento speciale trovato
+                if newBoard[newX][newY] == 'U' then
+                    newSempai.umilta = newSempai.umilta + 1
+                elseif newBoard[newX][newY] == 'C' then
+                    newSempai.coraggio = newSempai.coraggio + 1
+                elseif newBoard[newX][newY] == 'R' then
+                    newSempai.rispetto = newSempai.rispetto + 1
+                elseif newBoard[newX][newY] == 'G' then
+                    newSempai.gentilezza = newSempai.gentilezza + 1
+                end
+
+                newBoard[x][y] = '-'
+
+                newBoard[newX][newY] = newSempai
+
+                newSempai.posizione.x = newX
+                newSempai.posizione.y = newY
+
+            else
+
+                newBoard = war_function.war(newBoard, newSempai, newBoard[newX][newY])
+
+                newBoard[x][y] = '-'
+
+                newBoard[newX][newY] = newSempai
+
+                newSempai.posizione.x = newX
+                newSempai.posizione.y = newY
+
+
+            end
+
+        elseif newBoard[newX][newY] == '-' then
+
+            -- Assegna '-' alla posizione attuale del sempai
+            newBoard[x][y] = '-'
+
+            -- Sposta il sempai verso la nuova direzione se la posizione è valida
+            newBoard[newX][newY] = newSempai
+
+            -- Aggiorna posizione del sempai
+            newSempai.posizione.x = newX
+            newSempai.posizione.y = newY
+
         end
     end
-
-
-    -- Assegna '-' alla posizione attuale del sempai
-    newBoard[x][y] = '-'
-
-    -- Sposta il sempai verso la nuova direzione se la posizione è valida
-    newBoard[newX][newY] = newSempai
-
-    -- Aggiorna posizione del sempai
-    newSempai.posizione.x = newX
-    newSempai.posizione.y = newY
 
     return newBoard
 
 end
+
+
 
 --Funzione che permette di muovere il sempai a nord
 local function moveNord(board, x, y)
@@ -55,6 +84,7 @@ local function moveNord(board, x, y)
 end
 
 local function moveSud(board, x, y)
+
     if x < 10 then
         return moveSempai(board, x, y, 1, 0)
     end
@@ -83,16 +113,6 @@ local function moveOvest(board, x, y)
     return board
 end
 
-
--- Funzione per calcolare la somma dei valori di un Sempai
-local function sum(sempai)
-    return sempai.umilta + sempai.coraggio + sempai.gentilezza + sempai.rispetto
-end
-
--- Funzione per calcolare la priorità di un Sempai in caso di parità di punteggio
-local function priority(sempai)
-    return (((sempai.posizione.x + sempai.posizione.y) * ((sempai.posizione.x + sempai.posizione.y) - 1)) / 2) + sempai.posizione.x - sempai.posizione.y
-end
 
 
 --Funzione che mi permette di calcolare il numero di sempai presenti nella scacchiera
