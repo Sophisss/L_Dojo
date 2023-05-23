@@ -7,8 +7,10 @@ local function deleteSempai (board, sempai)
 
     local newBoard = init_function.clone(board)
 
-    local x = sempai.posizione.x
-    local y = sempai.posizione.y
+    local newSempai = init_function.clone(sempai)
+
+    local x = newSempai.posizione.x
+    local y = newSempai.posizione.y
 
     newBoard[x][y] = '-'
 
@@ -22,10 +24,13 @@ local function calculatePriority (sempai1, sempai2)
     local priority1 = sempai_function.priority(sempai1)
     local priority2 = sempai_function.priority(sempai2)
 
+    local newSempai1 = init_function.clone(sempai1)
+    local newSempai2 = init_function.clone(sempai2)
+
     if priority1 > priority2 then
-        return sempai2
+        return newSempai2
         elseif priority1 < priority2 then
-        return sempai1
+        return newSempai1
     end
 end
 

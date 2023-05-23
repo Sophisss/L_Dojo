@@ -61,8 +61,7 @@ local function nearestObjectFunction(objects, sempaiX, sempaiY)
 
         if minValue == nil or distance < minValue then
             minValue = distance
-            local nearestObject = objects[i]
-            nearestObjectX, nearestObjectY = table.unpack(nearestObject)
+            nearestObjectX, nearestObjectY = objectX, objectY
         end
     end
 
