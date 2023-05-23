@@ -7,36 +7,20 @@ local function readConfigFromFile(filename)
 end
 
 
-
--- inizializza la scacchiera
-local function initializeBoard(N)
-    return table_function.inizialize(N)
-end
-
-
--- stampa la scacchiera
-local function printBoard(board, N)
-    table_function.print(board, N)
-end
-
-
--- inserisci i simboli nella scacchiera
-local function insertSymbols(D, board)
-    return table_function.insert(D, board)
-end
-
-
 -- inizializza il gioco
 local function initializeGame(configContent)
 
-    local board = initializeBoard(configContent.N)
-    local newBoard = insertSymbols(configContent.D, board)
+    -- inizializza la scacchiera
+    local board = table_function.inizialize(configContent.N)
 
-    printBoard(newBoard, configContent.N)
+    -- inserisci i simboli nella scacchiera
+    local newBoard = table_function.insert(configContent.D, board)
+
+    -- stampa la scacchiera
+    table_function.print(newBoard, configContent.N)
 
     return newBoard, configContent
 end
-
 
 local F = {
     readConfigFromFile = readConfigFromFile,

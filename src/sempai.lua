@@ -2,8 +2,12 @@ local init_function = require("init")
 
 local function moveSempai(board, x, y, dx, dy)
 
+
+    --Clona la tabella
+    local newBoard = init_function.clone(board)
+
     --Clona il sempai
-    local newSempai = init_function.clone(board[x][y])
+    local newSempai = init_function.clone(newBoard[x][y])
 
     --Determina le nuove coordinate
     local newX = x + dx
@@ -11,22 +15,20 @@ local function moveSempai(board, x, y, dx, dy)
 
     -- Verifica se la nuova posizione è valida e se è presente un sempai
     if newX >= 1 and newX <= 10 and newY >= 1 and newY <= 10 and
-            (board[newX][newY] ~= '-' and (type(board[newX][newY]) ~= "table" or board[newX][newY] ~= 'S')) then
+            (newBoard[newX][newY] ~= '-' and (type(newBoard[newX][newY]) ~= "table" or newBoard[newX][newY] ~= 'S')) then
 
         -- Aggiorna i valori del sempai in base all'elemento speciale trovato
-        if board[newX][newY] == 'U' then
+        if newBoard[newX][newY] == 'U' then
             newSempai.umilta = newSempai.umilta + 1
-        elseif board[newX][newY] == 'C' then
+        elseif newBoard[newX][newY] == 'C' then
             newSempai.coraggio = newSempai.coraggio + 1
-        elseif board[newX][newY] == 'R' then
+        elseif newBoard[newX][newY] == 'R' then
             newSempai.rispetto = newSempai.rispetto + 1
-        elseif board[newX][newY] == 'G' then
+        elseif newBoard[newX][newY] == 'G' then
             newSempai.gentilezza = newSempai.gentilezza + 1
         end
     end
 
-    --Clona la tabella
-    local newBoard = init_function.clone(board)
 
     -- Assegna '-' alla posizione attuale del sempai
     newBoard[x][y] = '-'
@@ -38,7 +40,7 @@ local function moveSempai(board, x, y, dx, dy)
     newSempai.posizione.x = newX
     newSempai.posizione.y = newY
 
-    return newBoard, newSempai
+    return newBoard
 
 end
 
@@ -49,7 +51,7 @@ local function moveNord(board, x, y)
     end
 
     -- Restituisci la tabella originale se il sempai non può essere spostato verso nord
-    return board, board[x][y]
+    return board
 end
 
 local function moveSud(board, x, y)
@@ -58,7 +60,7 @@ local function moveSud(board, x, y)
     end
 
     -- Restituisci la tabella originale se il sempai non può essere spostato verso nord
-    return board, board[x][y]
+    return board
 end
 
 local function moveEst(board, x, y)
@@ -68,7 +70,7 @@ local function moveEst(board, x, y)
     end
 
     -- Restituisci la tabella originale se il sempai non può essere spostato verso nord
-    return board, board[x][y]
+    return board
 
 end
 
@@ -78,7 +80,7 @@ local function moveOvest(board, x, y)
     end
 
     -- Restituisci la tabella originale se il sempai non può essere spostato verso nord
-    return board, board[x][y]
+    return board
 end
 
 
@@ -89,7 +91,7 @@ end
 
 -- Funzione per calcolare la priorità di un Sempai in caso di parità di punteggio
 local function priority(sempai)
-    return (((sempai.posizione.x + sempai.posizione.y) * ((sempai.posizione.x + sempai.posizione.y) - 1))/ 2) + sempai.posizione.x - sempai.posizione.y
+    return (((sempai.posizione.x + sempai.posizione.y) * ((sempai.posizione.x + sempai.posizione.y) - 1)) / 2) + sempai.posizione.x - sempai.posizione.y
 end
 
 
@@ -125,7 +127,6 @@ local function searchSempai(board)
 
     return sempaiList
 end
-
 
 local function printSempai(sempai)
     print("Coraggio: " .. sempai.coraggio ..

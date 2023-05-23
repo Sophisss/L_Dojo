@@ -29,7 +29,7 @@ local function calculatePriority (sempai1, sempai2)
 
     if priority1 > priority2 then
         return newSempai2
-        elseif priority1 < priority2 then
+    elseif priority1 < priority2 then
         return newSempai1
     end
 end
@@ -42,28 +42,27 @@ local function comparison(board)
 
     local position_sempai = sempai_function.searchSempai(newBoard)
 
-    for i=1, #position_sempai do
-        for j=2, #position_sempai do
+    for i = 1, #position_sempai do
+        for j = 2, #position_sempai do
             local sempai1 = position_sempai[i]
             local x, y = sempai1.posizione.x, sempai1.posizione.y
 
             local sempai2 = position_sempai[j]
             local x2, y2 = sempai2.posizione.x, sempai2.posizione.y
 
-
-            if (x == x2 +1 and y == y2) or
-                    (x== x2 -1 and y == y2) or
-                    (y == y2 +1 and x == x2) or
-                    (y == y2 -1 and x == x2) then
+            if (x == x2 + 1 and y == y2) or
+                    (x == x2 - 1 and y == y2) or
+                    (y == y2 + 1 and x == x2) or
+                    (y == y2 - 1 and x == x2) then
 
                 local tot_point_sempai1 = sempai_function.sum(sempai1)
                 local tot_point_sempai2 = sempai_function.sum(sempai2)
 
-                if tot_point_sempai1 >  tot_point_sempai2 then
+                if tot_point_sempai1 > tot_point_sempai2 then
                     newBoard = deleteSempai(newBoard, sempai2)
-                elseif tot_point_sempai1 <  tot_point_sempai2 then
+                elseif tot_point_sempai1 < tot_point_sempai2 then
                     newBoard = deleteSempai(newBoard, sempai1)
-                elseif tot_point_sempai1 ==  tot_point_sempai2 then
+                elseif tot_point_sempai1 == tot_point_sempai2 then
                     local minPrioritySempai = calculatePriority(sempai1, sempai2)
                     newBoard = deleteSempai(newBoard, minPrioritySempai)
                 end
@@ -74,7 +73,6 @@ local function comparison(board)
     return newBoard
 
 end
-
 
 local W = {
     deleteSempai = deleteSempai,

@@ -1,10 +1,10 @@
 --Funzione che crea il sempai
-local function create(x,y)
+local function create(x, y, u, c, g, r)
     local sempai = {
-        umilta = 0,
-        coraggio = 0,
-        gentilezza = 0,
-        rispetto = 0,
+        umilta = u,
+        coraggio = c,
+        gentilezza = g,
+        rispetto = r,
         posizione = { x = x, y = y }
     }
     return sempai
@@ -45,9 +45,11 @@ local function insert(D, board)
     for symbol, position in pairs(D) do
         for i = 1, #position do
             local x, y = position[i][1], position[i][2]
+            local u, c, g, r = position[i][3], position[i][4],
+            position[i][5], position[i][6]
 
             if symbol == 'S' then
-                local newSempai = create(x, y)
+                local newSempai = create(x, y, u, c, g, r)
                 newBoard[x][y] = newSempai
             else
                 newBoard[x][y] = symbol
@@ -79,8 +81,6 @@ local function print(board, N)
     file_output:close()
 end
 
-
-
 local T = {
     create = create,
     inizialize = inizialize,
@@ -88,7 +88,6 @@ local T = {
     print = print,
     clone = clone
 }
-
 
 return T
 

@@ -10,15 +10,14 @@ local function getObjectList(board)
         for j = 1, #board do
             if board[i][j] == "U" or board[i][j] == "G"
                     or board[i][j] == "C" or board[i][j] == "R" then
-                table.insert(objects, {i,j})
-                num_object = num_object +1
+                table.insert(objects, { i, j })
+                num_object = num_object + 1
             end
         end
     end
 
     return objects, num_object
 end
-
 
 local function countObjects(board)
     local objectCount = 0
@@ -43,7 +42,6 @@ local function calculateDistance(objectX, objectY, sempaiX, sempaiY)
     return math.sqrt((objectX - sempaiX) ^ 2 + (objectY - sempaiY) ^ 2)
 end
 
-
 local function nearestObjectFunction(objects, sempaiX, sempaiY)
 
     --Oggetto più vicino al sempai dato
@@ -52,7 +50,7 @@ local function nearestObjectFunction(objects, sempaiX, sempaiY)
     --Distanza minore
     local minValue
 
-    for i=1, #objects do
+    for i = 1, #objects do
         --Salvo le coordinate dell'oggetto
         local objectX, objectY = table.unpack(objects[i])
 
@@ -69,7 +67,6 @@ local function nearestObjectFunction(objects, sempaiX, sempaiY)
 
 end
 
-
 local function minPath(startX, startY, endX, endY)
     local direction
 
@@ -83,10 +80,8 @@ local function minPath(startX, startY, endX, endY)
         direction = "Est"
     end
 
-
     return direction
 end
-
 
 local function playGong(board)
 
@@ -94,16 +89,14 @@ local function playGong(board)
     local numSempai = sempai_function.countSempai(board)
 
     --Determino le posizioni di questi sempai
-    local position_sempai= sempai_function.searchSempai(board)
+    local position_sempai = sempai_function.searchSempai(board)
 
     --Determino l'elenco degli oggetti nella scacchiera
-    local objects,_ = getObjectList(board)
-
+    local objects, _ = getObjectList(board)
 
     local gongDirections = {}
 
-
-    for i=1, numSempai do
+    for i = 1, numSempai do
 
         -- Ottieni le coordinate del sempai
         local sempai = position_sempai[i]
@@ -117,13 +110,11 @@ local function playGong(board)
 
         gongDirections[i] = direction
 
-        end
+    end
 
     return gongDirections
 
 end
-
-
 
 local U = {
     getObjectList = getObjectList,
@@ -133,6 +124,5 @@ local U = {
     minPath = minPath,
     playGong = playGong
 }
-
 
 return U
