@@ -1,16 +1,25 @@
-local file_function = require("file")
-local start_function = require("startGame")
+local init_function = require("initGame.init")
+local file_function = require ("file.file")
+local start_function = require("startGame.start")
 
 local function playGame()
     local configContent = file_function.readConfigFromFile("config.lua")
-    local board, config = file_function.initializeGame(configContent)
+    local board = init_function.initializeGame(configContent)
 
-    start_function.moveSempai(board, config.N)
 
+    local success = start_function.startGame(board)
+
+    if success then
+        -- La partita è stata completata con successo
+        return "Partita completata!"
+    else
+        -- Si è verificato un errore o la partita non è stata completata
+        return "Si è verificato un errore durante la partita."
+    end
 
 end
 
-playGame()
+print(playGame())
 
 
 

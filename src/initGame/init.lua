@@ -1,3 +1,6 @@
+local utility_function = require("utility.utility")
+local file_function = require("file.file")
+
 --Funzione che crea il sempai
 local function create(x, y, u, c, g, r)
     local sempai = {
@@ -9,6 +12,7 @@ local function create(x, y, u, c, g, r)
     }
     return sempai
 end
+
 
 --Funzione che inizializza la scacchiera
 local function inizialize(N)
@@ -23,24 +27,10 @@ local function inizialize(N)
 end
 
 
---Funzione che serve per clonare in profondità la schacchiera
-local function clone (t)
-    local new_table = {}
-    for k, v in pairs(t) do
-        if type(v) == "table" then
-            new_table[k] = clone(v)
-        else
-            new_table[k] = v
-        end
-    end
-    return new_table
-end
-
-
 --Funzione che inserisce i simboli nella scacchiera
 local function insert(D, board)
 
-    local newBoard = clone(board)
+    local newBoard = utility_function.clone(board)
 
     for symbol, position in pairs(D) do
         for i = 1, #position do
@@ -62,34 +52,23 @@ local function insert(D, board)
 end
 
 
---Funzione che stampa la scacchiera
-local function print(board, N)
-    local filename = "output.txt"
-    local file_output = io.open(filename, "a")
+-- Funzione che inizializza il gioco
+local function initializeGame(configContent)
 
-    for i = 1, N do
-        for j = 1, N do
-            local value = board[i][j]
-            if type(value) == "table" then
-                value = "S"
-            end
-            file_output:write(value .. " ")
-        end
-        file_output:write("\n")
-    end
-    file_output:write("\n")
-    file_output:close()
+    -- inizializza la scacchiera
+    local board = inizialize(configContent.N)
+
+    -- inserisci i simboli nella scacchiera
+    local newBoard = insert(configContent.D, board)
+
+    -- stampa la scacchiera
+    file_function.print(newBoard, configContent.N)
+
+    return newBoard
 end
 
 local T = {
-    create = create,
-    inizialize = inizialize,
-    insert = insert,
-    print = print,
-    clone = clone
+    initializeGame = initializeGame
 }
 
 return T
-
-
-
