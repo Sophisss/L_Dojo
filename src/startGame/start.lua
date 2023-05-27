@@ -4,58 +4,84 @@ local file_function = require("file.file")
 
 local function printSempai (board)
 
-    local position_sempai = utility_function.getSempai(board)
+    for i = 1, #board do
+        for j = 1, #board do
 
-    for i = 1, #position_sempai do
-        sempai_function.printSempai(position_sempai[i])
+            if type(board[i][j]) == "table" then
+                sempai_function.printSempai(board[i][j])
+            end
+        end
     end
 end
 
-local function startGame (board)
-
+local function moveAllSempaiTowardsNearestObject(board)
     -- Copia la scacchiera
     local newBoard = utility_function.clone(board)
+    local sempaiList = utility_function.getSempai(newBoard)
+    local objectList = utility_function.getObjectList(newBoard)
 
-    local listSempai = utility_function.getSempai(newBoard)
+    if #objectList == 0 then
+        for _, sempai in pairs(sempaiList) do
+            local nearestSempai = utility_function.findNearestObject(sempai, sempaiList)
 
-    printSempai(newBoard)
-
-    if #listSempai > 1 then
-
-        for i = 1, #listSempai do
-
-            local nearestObjectX, nearestObjectY = utility_function.nearestObjectFunction(newBoard, listSempai[i])
-
-            local direction = utility_function.minPath(listSempai[i].posizione.x, listSempai[i].posizione.y, nearestObjectX, nearestObjectY)
+            local direction = utility_function.minPath(sempai.x, sempai.y, nearestSempai.x, nearestSempai.y)
 
             -- Sposto il sempai nella direzione determinata
             if direction == "Nord" then
-                newBoard = sempai_function.moveSempai(newBoard, listSempai[i].posizione.x, listSempai[i].posizione.y, -1, 0)
+                newBoard = sempai_function.moveSempai(newBoard, sempai.x, sempai.y, -1, 0)
             elseif direction == "Sud" then
-                newBoard = sempai_function.moveSempai(newBoard, listSempai[i].posizione.x, listSempai[i].posizione.y, 1, 0)
+                newBoard = sempai_function.moveSempai(newBoard, sempai.x, sempai.y, 1, 0)
             elseif direction == "Est" then
-                newBoard = sempai_function.moveSempai(newBoard, listSempai[i].posizione.x, listSempai[i].posizione.y, 0, 1)
+                newBoard = sempai_function.moveSempai(newBoard, sempai.x, sempai.y, 0, 1)
             elseif direction == "Ovest" then
-                newBoard = sempai_function.moveSempai(newBoard, listSempai[i].posizione.x, listSempai[i].posizione.y, 0, -1)
-            else
-                return nil
+                newBoard = sempai_function.moveSempai(newBoard, sempai.x, sempai.y, 0, -1)
             end
+
+            sempaiList = utility_function.getSempai(newBoard)
         end
 
-        file_function.print(newBoard, #newBoard)
+    elseif #objectList > 0 then
+        for _, sempai in pairs(sempaiList) do
+            local nearestObject = utility_function.findNearestObject(sempai, objectList)
 
-        return startGame(newBoard)
+            local direction = utility_function.minPath(sempai.x, sempai.y, nearestObject.x, nearestObject.y)
 
-    elseif #listSempai == 1 then
-
-        return true
-
+            -- Sposto il sempai nella direzione determinata
+            if direction == "Nord" then
+                newBoard = sempai_function.moveSempai(newBoard, sempai.x, sempai.y, -1, 0)
+            elseif direction == "Sud" then
+                newBoard = sempai_function.moveSempai(newBoard, sempai.x, sempai.y, 1, 0)
+            elseif direction == "Est" then
+                newBoard = sempai_function.moveSempai(newBoard, sempai.x, sempai.y, 0, 1)
+            elseif direction == "Ovest" then
+                newBoard = sempai_function.moveSempai(newBoard, sempai.x, sempai.y, 0, -1)
+            end
+            objectList = utility_function.getObjectList(newBoard)
+        end
     else
         return nil
-
     end
+
+    return newBoard
 end
 
+local function startGame(board)
+    -- Copia la scacchiera
+    local newBoard = utility_function.clone(board)
+    local listSempai = utility_function.getSempai(newBoard)
+
+    while #listSempai > 1 do
+        printSempai(newBoard)
+        print("\n--------------")
+        -- Spostamento verso l'oggetto/sempai più vicino
+        newBoard = moveAllSempaiTowardsNearestObject(newBoard)
+        file_function.print(newBoard, #newBoard)
+        listSempai = utility_function.getSempai(newBoard)
+    end
+    printSempai(newBoard)
+    print("\n--------------")
+    return true
+end
 
 local START = {
     startGame = startGame

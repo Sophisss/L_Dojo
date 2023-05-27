@@ -17,7 +17,6 @@ local function calculateDistance(objectX, objectY, sempaiX, sempaiY)
     return math.sqrt((objectX - sempaiX) ^ 2 + (objectY - sempaiY) ^ 2)
 end
 
-
 local function getObjectList(board)
     local objects = {}
 
@@ -25,7 +24,7 @@ local function getObjectList(board)
         for j = 1, #board do
             if board[i][j] == "U" or board[i][j] == "G"
                     or board[i][j] == "C" or board[i][j] == "R" then
-                table.insert(objects, {x= i, y= j })
+                table.insert(objects, { x = i, y = j })
             end
         end
     end
@@ -42,7 +41,7 @@ local function getSempai(board)
     for i = 1, #board do
         for j = 1, #board[i] do
             if type(board[i][j]) == "table" or board[i][j] == "S" then
-                table.insert(sempaiList, board[i][j])
+                table.insert(sempaiList, { x = board[i][j].posizione.x, y = board[i][j].posizione.y })
             end
         end
     end
@@ -51,60 +50,30 @@ local function getSempai(board)
 end
 
 
-local function nearestObjectFunction(board, sempai)
+-- Funzione per determinare l'oggetto più vicino a un sempai
+local function findNearestObject(sempai, objects)
+    local nearestObject
+    local minDistance = math.huge
 
-    local newBoard = clone(board)
+    for i = 1, #objects do
+        local other = objects[i]
 
-    local newSempai = clone(sempai)
-
-    local objects  = getObjectList(newBoard)
-
-    local listSempai = getSempai(newBoard)
-
-    --Oggetto più vicino al sempai dato
-    local nearestObjectX, nearestObjectY = nil, nil
-
-    --Distanza minore
-    local minValue = math.hug
-
-
-    if #objects > 0 then
-
-        for i=1, #objects do
-
-            --Calcolo la distanza tra l'oggetto e il sempai
-            local distance = calculateDistance(objects[i].x, objects[i].y ,newSempai.posizione.x, newSempai.posizione.y)
-
-            if minValue == nil or distance < minValue then
-                minValue = distance
-                nearestObjectX, nearestObjectY = objects[i].x, objects[i].y
+        local dist = calculateDistance(other.x, other.y, sempai.x, sempai.y)
+        if dist > 0 then
+            if dist < minDistance then
+                minDistance = dist
+                nearestObject = other
             end
+        elseif dist == 0 then
+            minDistance = minDistance
+            nearestObject = nearestObject
+        else
+            return nil
         end
-
-    elseif #objects == 0 then
-
-
-
-        for i = 1, #listSempai do
-
-            --Calcolo la distanza tra l'oggetto e il sempai
-            local distance = calculateDistance(listSempai[i].posizione.x, listSempai[i].posizione.y ,newSempai.posizione.x, newSempai.posizione.y)
-
-            if minValue == nil or distance < minValue then
-                minValue = distance
-                nearestObjectX, nearestObjectY = listSempai[i].posizione.x, listSempai[i].posizione.y
-            end
-
-        end
-
-    else
-
-        return nil
     end
 
-    return nearestObjectX, nearestObjectY
+    return nearestObject
 end
-
 
 local function minPath(startX, startY, endX, endY)
     local direction
@@ -125,8 +94,10 @@ end
 local U = {
     clone = clone,
     getSempai = getSempai,
-    nearestObjectFunction = nearestObjectFunction,
+    getObjectList = getObjectList,
+    findNearestObject = findNearestObject,
     minPath = minPath
+
 
 }
 

@@ -32,6 +32,8 @@ local function calculatePriority (sempai1, sempai2)
 
     local priority1 = priority(sempai1)
     local priority2 = priority(sempai2)
+    print("Priorità1: "..priority1)
+    print("Priorità2: "..priority2)
 
     local newSempai1 = utility_function.clone(sempai1)
     local newSempai2 = utility_function.clone(sempai2)
@@ -52,6 +54,31 @@ local function war (board, sempai1, sempai2)
     local newSempai1 = utility_function.clone(sempai1)
     local newSempai2 = utility_function.clone(sempai2)
 
+
+    if newSempai1.umilta > newSempai2.umilta then
+        newSempai1.umilta = newSempai1.umilta + 1
+    elseif newSempai1.umilta < newSempai2.umilta then
+        newSempai2.umilta = newSempai2.umilta + 1
+    end
+
+    if newSempai1.coraggio > newSempai2.coraggio then
+        newSempai1.coraggio = newSempai1.coraggio + 1
+    elseif newSempai1.coraggio < newSempai2.coraggio then
+        newSempai2.coraggio = newSempai2.coraggio + 1
+    end
+
+    if newSempai1.rispetto > newSempai2.rispetto then
+        newSempai1.rispetto = newSempai1.rispetto + 1
+    elseif newSempai1.rispetto < newSempai2.rispetto then
+        newSempai2.rispetto = newSempai2.rispetto + 1
+    end
+
+    if newSempai1.gentilezza > newSempai2.gentilezza then
+        newSempai1.gentilezza = newSempai1.gentilezza + 1
+    elseif newSempai1.gentilezza < newSempai2.gentilezza then
+        newSempai2.gentilezza = newSempai2.gentilezza + 1
+    end
+
     local tot_point_sempai1 = sum(newSempai1)
     local tot_point_sempai2 = sum(newSempai2)
 
@@ -59,27 +86,27 @@ local function war (board, sempai1, sempai2)
 
     if tot_point_sempai1 > tot_point_sempai2 then
         win = newSempai1
-        newBoard = deleteSempai(newBoard, sempai2)
+        newBoard = deleteSempai(newBoard, newSempai2)
     elseif tot_point_sempai1 < tot_point_sempai2 then
         win = newSempai2
-        newBoard = deleteSempai(newBoard, sempai1)
+        newBoard = deleteSempai(newBoard, newSempai1)
     elseif tot_point_sempai1 == tot_point_sempai2 then
-        local maxPrioritySempai = calculatePriority(sempai1, sempai2)
+        local maxPrioritySempai = calculatePriority(newSempai1, newSempai2)
 
-        if maxPrioritySempai == newSempai1 then
+        if maxPrioritySempai.posizione.x == newSempai1.posizione.x and
+                maxPrioritySempai.posizione.y == newSempai1.posizione.y then
             win = newSempai1
             newBoard = deleteSempai(newBoard, newSempai2)
-        elseif maxPrioritySempai == newSempai2 then
+        elseif maxPrioritySempai.posizione.x == newSempai2.posizione.x and
+                maxPrioritySempai.posizione.y == newSempai2.posizione.y then
             win = newSempai2
             newBoard = deleteSempai(newBoard, newSempai1)
-        else
-            win = nil
         end
-
-        return newBoard, win
     end
+    return newBoard, win
 
-end local W = {
+end
+local W = {
     war = war
 }
 

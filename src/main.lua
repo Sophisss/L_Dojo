@@ -6,10 +6,9 @@ local function playGame()
     local configContent = file_function.readConfigFromFile("config.lua")
     local board = init_function.initializeGame(configContent)
 
+    local winner = start_function.startGame(board)
 
-    local success = start_function.startGame(board)
-
-    if success then
+    if winner then
         -- La partita è stata completata con successo
         return "Partita completata!"
     else

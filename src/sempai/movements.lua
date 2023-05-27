@@ -9,7 +9,6 @@ local function moveSempai(board, x, y, dx, dy)
     --Clona il sempai
     local newSempai = utility_function.clone(newBoard[x][y])
 
-
     --Determina le nuove coordinate
     local newX = x + dx
     local newY = y + dy
@@ -18,42 +17,39 @@ local function moveSempai(board, x, y, dx, dy)
 
         if newBoard[newX][newY] ~= '-' then
 
-            if type(newBoard[newX][newY]) ~= "table" or newBoard[newX][newY] ~= 'S' then
-
-                -- Aggiorna i valori del sempai in base all'elemento speciale trovato
-                if newBoard[newX][newY] == 'U' then
-                    newSempai.umilta = newSempai.umilta + 1
-                elseif newBoard[newX][newY] == 'C' then
-                    newSempai.coraggio = newSempai.coraggio + 1
-                elseif newBoard[newX][newY] == 'R' then
-                    newSempai.rispetto = newSempai.rispetto + 1
-                elseif newBoard[newX][newY] == 'G' then
-                    newSempai.gentilezza = newSempai.gentilezza + 1
-                end
-
-                newBoard[x][y] = '-'
-
-                newSempai.posizione.x = newX
-                newSempai.posizione.y = newY
-
-                newBoard[newX][newY] = newSempai
-            else
+            -- Aggiorna i valori del sempai in base all'elemento speciale trovato
+            if newBoard[newX][newY] == 'U' then
+                newSempai.umilta = newSempai.umilta + 1
+            elseif newBoard[newX][newY] == 'C' then
+                newSempai.coraggio = newSempai.coraggio + 1
+            elseif newBoard[newX][newY] == 'R' then
+                newSempai.rispetto = newSempai.rispetto + 1
+            elseif newBoard[newX][newY] == 'G' then
+                newSempai.gentilezza = newSempai.gentilezza + 1
+            elseif newBoard[newX][newY] ~= 'U' and newBoard[newX][newY] ~= 'R' and
+                    newBoard[newX][newY] ~= 'G' and newBoard[newX][newY] ~= 'C' then
 
                 local win
 
-                newBoard, win = war_function.war(newBoard, newSempai, newBoard[newX][newY])
+                local otherSempai = utility_function.clone(newBoard[newX][newY])
 
-                if win == newSempai then
+                newBoard, win = war_function.war(newBoard, newSempai, otherSempai)
 
-                    newBoard[x][y] = '-'
-
-                    newSempai.posizione.x = newX
-                    newSempai.posizione.y = newY
-
-                    newBoard[newX][newY] = newSempai
-
+                if win.posizione.x ~= newSempai.posizione.x and
+                        win.posizione.y ~= newSempai.posizione.y then
+                    newBoard[newX][newY] = win
+                    return newBoard
+                else
+                    newSempai = win
                 end
             end
+
+            newBoard[x][y] = '-'
+
+            newSempai.posizione.x = newX
+            newSempai.posizione.y = newY
+
+            newBoard[newX][newY] = newSempai
 
         elseif newBoard[newX][newY] == '-' then
 
@@ -71,20 +67,18 @@ local function moveSempai(board, x, y, dx, dy)
     return newBoard
 end
 
-
-
 local function printSempai(sempai)
     print("Coraggio: " .. sempai.coraggio ..
             "\nRispetto: " .. sempai.rispetto ..
             "\nGentilezza: " .. sempai.gentilezza ..
             "\nUmilta': " .. sempai.umilta ..
-            "\nPosizione: {" .. sempai.posizione.x .. "," .. sempai.posizione.y .. "}" .. "\n")
+            "\nPosizione: {" .. sempai.posizione.x .. "," .. sempai.posizione.y .. "}" ..
+            "\nSomma valori: " .. sempai.umilta + sempai.coraggio + sempai.rispetto + sempai.gentilezza .. "\n")
 end
 
-
-local S = {
+local M = {
     moveSempai = moveSempai,
     printSempai = printSempai
 }
 
-return S
+return M
