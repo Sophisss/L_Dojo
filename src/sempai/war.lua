@@ -32,8 +32,6 @@ local function calculatePriority (sempai1, sempai2)
 
     local priority1 = priority(sempai1)
     local priority2 = priority(sempai2)
-    print("Priorità1: "..priority1)
-    print("Priorità2: "..priority2)
 
     local newSempai1 = utility_function.clone(sempai1)
     local newSempai2 = utility_function.clone(sempai2)
@@ -54,29 +52,28 @@ local function war (board, sempai1, sempai2)
     local newSempai1 = utility_function.clone(sempai1)
     local newSempai2 = utility_function.clone(sempai2)
 
-
     if newSempai1.umilta > newSempai2.umilta then
-        newSempai1.umilta = newSempai1.umilta + 1
+        newSempai1 = utility_function.updateSempai(newSempai1, { umilta = newSempai1.umilta + 1 })
     elseif newSempai1.umilta < newSempai2.umilta then
-        newSempai2.umilta = newSempai2.umilta + 1
+        newSempai2 = utility_function.updateSempai(newSempai2, { umilta = newSempai2.umilta + 1 })
     end
 
     if newSempai1.coraggio > newSempai2.coraggio then
-        newSempai1.coraggio = newSempai1.coraggio + 1
+        newSempai1 = utility_function.updateSempai(newSempai1, {coraggio = newSempai1.coraggio +1})
     elseif newSempai1.coraggio < newSempai2.coraggio then
-        newSempai2.coraggio = newSempai2.coraggio + 1
+        newSempai2 = utility_function.updateSempai(newSempai2, {coraggio = newSempai2.coraggio +1})
     end
 
     if newSempai1.rispetto > newSempai2.rispetto then
-        newSempai1.rispetto = newSempai1.rispetto + 1
+        newSempai1 = utility_function.updateSempai(newSempai1, {rispetto = newSempai1.rispetto +1})
     elseif newSempai1.rispetto < newSempai2.rispetto then
-        newSempai2.rispetto = newSempai2.rispetto + 1
+        newSempai2 = utility_function.updateSempai(newSempai2, {rispetto = newSempai2.rispetto +1})
     end
 
     if newSempai1.gentilezza > newSempai2.gentilezza then
-        newSempai1.gentilezza = newSempai1.gentilezza + 1
+        newSempai1 = utility_function.updateSempai(newSempai1, {gentilezza = newSempai1.gentilezza +1})
     elseif newSempai1.gentilezza < newSempai2.gentilezza then
-        newSempai2.gentilezza = newSempai2.gentilezza + 1
+        newSempai2 = utility_function.updateSempai(newSempai2, {gentilezza = newSempai2.gentilezza +1})
     end
 
     local tot_point_sempai1 = sum(newSempai1)
@@ -101,6 +98,8 @@ local function war (board, sempai1, sempai2)
                 maxPrioritySempai.posizione.y == newSempai2.posizione.y then
             win = newSempai2
             newBoard = deleteSempai(newBoard, newSempai1)
+        elseif maxPrioritySempai == nil then
+            return newBoard
         end
     end
     return newBoard, win
