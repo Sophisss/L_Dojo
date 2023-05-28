@@ -63,6 +63,9 @@ local function findNearestObject(sempai, objects)
             if dist < minDistance then
                 minDistance = dist
                 nearestObject = other
+            else
+                minDistance = minDistance
+                nearestObject = nearestObject
             end
         elseif dist == 0 then
             minDistance = minDistance
@@ -91,12 +94,33 @@ local function minPath(startX, startY, endX, endY)
     return direction
 end
 
+
+local function updateSempai(sempai, updates)
+    -- Crea una nuova tabella per il nuovo oggetto sempai
+    local newSempai = {}
+
+    -- Copia tutte le proprietà dell'oggetto sempai originale nel nuovo oggetto sempai
+    for key, value in pairs(sempai) do
+        newSempai[key] = value
+    end
+
+    -- Aggiorna le proprietà specificate nell'oggetto updates
+    for key, value in pairs(updates) do
+        newSempai[key] = value
+    end
+
+    return newSempai
+end
+
+
+
 local U = {
     clone = clone,
     getSempai = getSempai,
     getObjectList = getObjectList,
     findNearestObject = findNearestObject,
-    minPath = minPath
+    minPath = minPath,
+    updateSempai = updateSempai
 
 
 }
