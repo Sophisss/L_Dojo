@@ -19,31 +19,26 @@ local function moveSempai(board, x, y, dx, dy)
 
             -- Aggiorna i valori del sempai in base all'elemento speciale trovato
             if newBoard[newX][newY] == 'U' then
-                newSempai.umilta = newSempai.umilta + 1
+                newSempai = utility_function.updateSempai(newSempai, { umilta = newSempai.umilta + 1 })
             elseif newBoard[newX][newY] == 'C' then
-                newSempai.coraggio = newSempai.coraggio + 1
+                newSempai = utility_function.updateSempai(newSempai, { coraggio = newSempai.coraggio + 1 })
             elseif newBoard[newX][newY] == 'R' then
-                newSempai.rispetto = newSempai.rispetto + 1
+                newSempai = utility_function.updateSempai(newSempai, { rispetto = newSempai.rispetto + 1 })
             elseif newBoard[newX][newY] == 'G' then
-                newSempai.gentilezza = newSempai.gentilezza + 1
+                newSempai = utility_function.updateSempai(newSempai, { gentilezza = newSempai.gentilezza + 1 })
             elseif newBoard[newX][newY] ~= 'U' and newBoard[newX][newY] ~= 'R' and
                     newBoard[newX][newY] ~= 'G' and newBoard[newX][newY] ~= 'C' then
 
-                local win
-
+                --Clono il sempai trovato
                 local otherSempai = utility_function.clone(newBoard[newX][newY])
 
-                newBoard, win = war_function.war(newBoard, newSempai, otherSempai)
+                --Guerra tra i due sempai
+                newBoard, newSempai = war_function.war(newBoard, newSempai, otherSempai)
 
-                if win.posizione.x ~= newSempai.posizione.x and
-                        win.posizione.y ~= newSempai.posizione.y then
-                    newBoard[newX][newY] = win
+                if newSempai == nil then
                     return newBoard
-                else
-                    newSempai = win
                 end
             end
-
             newBoard[x][y] = '-'
 
             newSempai.posizione.x = newX
