@@ -3,7 +3,6 @@ local sempai_function = require("sempai.movements")
 local file_function = require("file.file")
 
 local function printSempai (board)
-
     for i = 1, #board do
         for j = 1, #board do
 
@@ -13,6 +12,7 @@ local function printSempai (board)
         end
     end
 end
+
 
 local function moveAllSempaiTowardsNearestObject(board)
     -- Copia la scacchiera
@@ -43,6 +43,9 @@ local function moveAllSempaiTowardsNearestObject(board)
     elseif #objectList > 0 then
         for _, sempai in pairs(sempaiList) do
             local nearestObject = utility_function.findNearestObject(sempai, objectList)
+            if nearestObject == nil then
+                return newBoard
+            end
 
             local direction = utility_function.minPath(sempai.x, sempai.y, nearestObject.x, nearestObject.y)
 
@@ -58,8 +61,6 @@ local function moveAllSempaiTowardsNearestObject(board)
             end
             objectList = utility_function.getObjectList(newBoard)
         end
-    else
-        return nil
     end
 
     return newBoard
