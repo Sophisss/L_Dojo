@@ -1,13 +1,17 @@
 --Funzione che serve per clonare in profondità la scacchiera
-local function clone (t)
-    local new_table = {}
-    for k, v in pairs(t) do
-        if type(v) == "table" then
-            new_table[k] = clone(v)
-        else
-            new_table[k] = v
+local function clone(t)
+    local new_table
+
+    if type(t) == 'table' then
+        new_table = {}
+
+        for k, v in pairs(t) do
+            new_table[clone(k)] = clone(v)
         end
+    else
+        new_table = t
     end
+
     return new_table
 end
 
@@ -94,7 +98,6 @@ local function minPath(startX, startY, endX, endY)
     return direction
 end
 
-
 local function updateSempai(sempai, updates)
     -- Crea una nuova tabella per il nuovo oggetto sempai
     local newSempai = {}
@@ -112,8 +115,6 @@ local function updateSempai(sempai, updates)
     return newSempai
 end
 
-
-
 local U = {
     clone = clone,
     getSempai = getSempai,
@@ -121,8 +122,6 @@ local U = {
     findNearestObject = findNearestObject,
     minPath = minPath,
     updateSempai = updateSempai
-
-
 }
 
 return U

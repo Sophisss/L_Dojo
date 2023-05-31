@@ -67,21 +67,27 @@ local function moveAllSempaiTowardsNearestObject(board)
 end
 
 local function startGame(board)
-    -- Copia la scacchiera
-    local newBoard = utility_function.clone(board)
-    local listSempai = utility_function.getSempai(newBoard)
+    local function recursiveStartGame(b)
+        local newBoard = utility_function.clone(b)
+        local listSempai = utility_function.getSempai(newBoard)
 
-    while #listSempai > 1 do
-        printSempai(newBoard)
-        print("\n--------------")
-        -- Spostamento verso l'oggetto/sempai più vicino
-        newBoard = moveAllSempaiTowardsNearestObject(newBoard)
-        file_function.print(newBoard, #newBoard)
-        listSempai = utility_function.getSempai(newBoard)
+        if #listSempai > 1 then
+            printSempai(newBoard)
+            print("\n--------------")
+            newBoard = moveAllSempaiTowardsNearestObject(newBoard)
+            file_function.print(newBoard, #newBoard)
+            listSempai = utility_function.getSempai(newBoard)
+            return recursiveStartGame(newBoard)
+        elseif #listSempai == 1 then
+            printSempai(newBoard)
+            print("\n--------------")
+            return true
+        else
+            return nil
+        end
     end
-    printSempai(newBoard)
-    print("\n--------------")
-    return true
+
+    return recursiveStartGame(board)
 end
 
 local START = {
