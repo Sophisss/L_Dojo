@@ -33,10 +33,8 @@ local function insert(D, board)
     local newBoard = utility_function.clone(board)
 
     for symbol, position in pairs(D) do
-        for i = 1, #position do
-            local x, y = position[i][1], position[i][2]
-            local u, c, g, r = position[i][3], position[i][4],
-            position[i][5], position[i][6]
+        for _, coords in ipairs(position) do
+            local x, y, u, c, g, r = table.unpack(coords)
 
             if symbol == 'S' then
                 local newSempai = create(x, y, u, c, g, r)
@@ -62,7 +60,7 @@ local function initializeGame(configContent)
     local newBoard = insert(configContent.D, board)
 
     -- stampa la scacchiera
-    file_function.print(newBoard, configContent.N)
+    file_function.printAndWriteToFile(newBoard, configContent.N)
 
     return newBoard
 end
