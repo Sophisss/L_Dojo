@@ -75,9 +75,9 @@ local function startGame(board)
             printSempai(newBoard)
             print("\n--------------")
             newBoard = moveAllSempaiTowardsNearestObject(newBoard)
-            file_function.print(newBoard, #newBoard)
-            listSempai = utility_function.getSempai(newBoard)
+            file_function.printAndWriteToFile(newBoard, #newBoard)
             return recursiveStartGame(newBoard)
+
         elseif #listSempai == 1 then
             printSempai(newBoard)
             print("\n--------------")
