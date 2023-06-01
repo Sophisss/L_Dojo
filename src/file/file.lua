@@ -3,29 +3,39 @@ local function readConfigFromFile(filename)
     return dofile(filename)
 end
 
+--Funzione che apre il file in modalità append e ci scrive dentro
+local function writeToFile(data)
+    local file_output = io.open("configuration.txt", "a")
+    file_output:write(data.."\n")
+    file_output:close()
+end
 
---Funzione che stampa la scacchiera
-local function print(board, N)
-    local filename = "output.txt"
-    local file_output = io.open(filename, "a")
+--Per ogni cella della scacchiera, viene estratto il valore e
+--inserito nella riga corrispondente.
+local function printAndWriteToFile(board, N)
+    local lines = {}
 
     for i = 1, N do
+        local line = {}
         for j = 1, N do
             local value = board[i][j]
             if type(value) == "table" then
                 value = "S"
             end
-            file_output:write(value .. " ")
+            table.insert(line, value)
         end
-        file_output:write("\n")
+        table.insert(lines, table.concat(line, " "))
     end
-    file_output:write("\n")
-    file_output:close()
+
+    --Usato concat per unire le righe e ritorna come stringa
+    local output = table.concat(lines, "\n") .. "\n"
+    return writeToFile(output)
 end
+
 
 local F = {
     readConfigFromFile = readConfigFromFile,
-    print = print
+    printAndWriteToFile = printAndWriteToFile
 }
 
 return F
