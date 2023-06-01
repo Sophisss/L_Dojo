@@ -43,7 +43,7 @@ local function getSempai(board)
 
     -- Trova i sempai nella tabella
     for i = 1, #board do
-        for j = 1, #board[i] do
+        for j = 1, #board do
             if type(board[i][j]) == "table" or board[i][j] == "S" then
                 table.insert(sempaiList, { x = board[i][j].posizione.x, y = board[i][j].posizione.y })
             end
