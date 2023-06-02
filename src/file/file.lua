@@ -29,7 +29,7 @@ local function printAndWriteToFile(board, N)
 
     --Usato concat per unire le righe e ritorna come stringa
     local output = table.concat(lines, "\n") .. "\n"
-    return writeToFile(output)
+    writeToFile(output)
 end
 
 

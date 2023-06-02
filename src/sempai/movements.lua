@@ -19,16 +19,14 @@ local function moveSempai(board, x, y, dx, dy)
 
             -- Aggiorna i valori del sempai in base all'elemento speciale trovato
             if newBoard[newX][newY] == 'U' then
-                newSempai = utility_function.updateSempai(newSempai, { umilta = newSempai.umilta + 1 })
+                newSempai.umilta = newSempai.umilta + 1
             elseif newBoard[newX][newY] == 'C' then
-                newSempai = utility_function.updateSempai(newSempai, { coraggio = newSempai.coraggio + 1 })
+                newSempai.coraggio = newSempai.coraggio + 1
             elseif newBoard[newX][newY] == 'R' then
-                newSempai = utility_function.updateSempai(newSempai, { rispetto = newSempai.rispetto + 1 })
+                newSempai.rispetto = newSempai.rispetto + 1
             elseif newBoard[newX][newY] == 'G' then
-                newSempai = utility_function.updateSempai(newSempai, { gentilezza = newSempai.gentilezza + 1 })
-            elseif newBoard[newX][newY] ~= 'U' and newBoard[newX][newY] ~= 'R' and
-                    newBoard[newX][newY] ~= 'G' and newBoard[newX][newY] ~= 'C' then
-
+                newSempai.gentilezza = newSempai.gentilezza + 1
+            else
                 --Clono il sempai trovato
                 local otherSempai = utility_function.clone(newBoard[newX][newY])
 

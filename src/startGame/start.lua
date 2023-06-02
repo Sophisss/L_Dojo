@@ -13,20 +13,38 @@ local function printSempai (board)
     end
 end
 
-
 local function moveAllSempaiTowardsNearestObject(board)
     -- Copia la scacchiera
     local newBoard = utility_function.clone(board)
     local sempaiList = utility_function.getSempai(newBoard)
     local objectList = utility_function.getObjectList(newBoard)
 
-    if #objectList == 0 then
-        for _, sempai in pairs(sempaiList) do
-            local nearestSempai = utility_function.findNearestObject(sempai, sempaiList)
+    for _, sempai in pairs(sempaiList) do
+        local nearestObject = utility_function.findNearestObject(sempai, objectList)
 
-            local direction = utility_function.minPath(sempai.x, sempai.y, nearestSempai.x, nearestSempai.y)
+        -- Verifica se ci sono oggetti nella tabella
+        if nearestObject ~= nil then
+            local direction = utility_function.minPath(sempai.x, sempai.y, nearestObject.x, nearestObject.y)
 
-            -- Sposto il sempai nella direzione determinata
+            -- Sposta il sempai verso l'oggetto
+            if direction == "Nord" then
+                newBoard = sempai_function.moveSempai(newBoard, sempai.x, sempai.y, -1, 0)
+            elseif direction == "Sud" then
+                newBoard = sempai_function.moveSempai(newBoard, sempai.x, sempai.y, 1, 0)
+            elseif direction == "Est" then
+                newBoard = sempai_function.moveSempai(newBoard, sempai.x, sempai.y, 0, 1)
+            elseif direction == "Ovest" then
+                newBoard = sempai_function.moveSempai(newBoard, sempai.x, sempai.y, 0, -1)
+            end
+
+            objectList = utility_function.getObjectList(newBoard)
+        else
+            -- Sposta il sempai verso gli altri sempai
+            nearestObject = utility_function.findNearestObject(sempai, sempaiList)
+
+            local direction = utility_function.minPath(sempai.x, sempai.y, nearestObject.x, nearestObject.y)
+
+            -- Sposta il sempai verso l'altro sempai
             if direction == "Nord" then
                 newBoard = sempai_function.moveSempai(newBoard, sempai.x, sempai.y, -1, 0)
             elseif direction == "Sud" then
@@ -39,55 +57,34 @@ local function moveAllSempaiTowardsNearestObject(board)
 
             sempaiList = utility_function.getSempai(newBoard)
         end
-
-    elseif #objectList > 0 then
-        for _, sempai in pairs(sempaiList) do
-            local nearestObject = utility_function.findNearestObject(sempai, objectList)
-            if nearestObject == nil then
-                return newBoard
-            end
-
-            local direction = utility_function.minPath(sempai.x, sempai.y, nearestObject.x, nearestObject.y)
-
-            -- Sposto il sempai nella direzione determinata
-            if direction == "Nord" then
-                newBoard = sempai_function.moveSempai(newBoard, sempai.x, sempai.y, -1, 0)
-            elseif direction == "Sud" then
-                newBoard = sempai_function.moveSempai(newBoard, sempai.x, sempai.y, 1, 0)
-            elseif direction == "Est" then
-                newBoard = sempai_function.moveSempai(newBoard, sempai.x, sempai.y, 0, 1)
-            elseif direction == "Ovest" then
-                newBoard = sempai_function.moveSempai(newBoard, sempai.x, sempai.y, 0, -1)
-            end
-            objectList = utility_function.getObjectList(newBoard)
-        end
     end
 
     return newBoard
 end
 
 local function startGame(board)
-    local function recursiveStartGame(b)
-        local newBoard = utility_function.clone(b)
-        local listSempai = utility_function.getSempai(newBoard)
+    local newBoard = utility_function.clone(board)
+    local listSempai = utility_function.getSempai(newBoard)
+    local finalResult
 
-        if #listSempai > 1 then
-            printSempai(newBoard)
-            print("\n--------------")
-            newBoard = moveAllSempaiTowardsNearestObject(newBoard)
-            file_function.printAndWriteToFile(newBoard, #newBoard)
-            return recursiveStartGame(newBoard)
+    if #listSempai > 1 then
+        printSempai(newBoard)
+        print("\n--------------")
 
-        elseif #listSempai == 1 then
-            printSempai(newBoard)
-            print("\n--------------")
-            return true
-        else
-            return nil
-        end
+        newBoard = moveAllSempaiTowardsNearestObject(newBoard)
+        file_function.printAndWriteToFile(newBoard, #newBoard)
+
+        finalResult = startGame(newBoard)
+
+    elseif #listSempai == 1 then
+        printSempai(newBoard)
+        print("\n--------------")
+        finalResult = true
+    else
+        return nil
     end
 
-    return recursiveStartGame(board)
+    return finalResult
 end
 
 local START = {

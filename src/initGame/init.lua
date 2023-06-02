@@ -33,7 +33,7 @@ local function insert(D, board)
     local newBoard = utility_function.clone(board)
 
     for symbol, position in pairs(D) do
-        for _, coords in ipairs(position) do
+        for  _, coords in ipairs(position) do
             local x, y, u, c, g, r = table.unpack(coords)
 
             if symbol == 'S' then

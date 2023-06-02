@@ -98,30 +98,13 @@ local function minPath(startX, startY, endX, endY)
     return direction
 end
 
-local function updateSempai(sempai, updates)
-    -- Crea una nuova tabella per il nuovo oggetto sempai
-    local newSempai = {}
-
-    -- Copia tutte le proprietà dell'oggetto sempai originale nel nuovo oggetto sempai
-    for key, value in pairs(sempai) do
-        newSempai[key] = value
-    end
-
-    -- Aggiorna le proprietà specificate nell'oggetto updates
-    for key, value in pairs(updates) do
-        newSempai[key] = value
-    end
-
-    return newSempai
-end
 
 local U = {
     clone = clone,
     getSempai = getSempai,
     getObjectList = getObjectList,
     findNearestObject = findNearestObject,
-    minPath = minPath,
-    updateSempai = updateSempai
+    minPath = minPath
 }
 
 return U
