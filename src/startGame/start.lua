@@ -3,11 +3,11 @@ local sempai_function = require("sempai.movements")
 local file_function = require("file.file")
 
 local function printSempai (board)
-    for i = 1, #board do
-        for j = 1, #board do
 
-            if type(board[i][j]) == "table" then
-                sempai_function.printSempai(board[i][j])
+    for _, row in ipairs(board) do
+        for _, value in ipairs(row) do
+            if type(value) == "table" then
+                sempai_function.printSempai(value)
             end
         end
     end

@@ -24,10 +24,9 @@ end
 local function getObjectList(board)
     local objects = {}
 
-    for i = 1, #board do
-        for j = 1, #board do
-            if board[i][j] == "U" or board[i][j] == "G"
-                    or board[i][j] == "C" or board[i][j] == "R" then
+    for i, row in ipairs(board) do
+        for j, value in ipairs(row) do
+            if value == "U" or value == "G" or value == "C" or value == "R" then
                 table.insert(objects, { x = i, y = j })
             end
         end
@@ -42,10 +41,10 @@ local function getSempai(board)
     local sempaiList = {}
 
     -- Trova i sempai nella tabella
-    for i = 1, #board do
-        for j = 1, #board do
-            if type(board[i][j]) == "table" or board[i][j] == "S" then
-                table.insert(sempaiList, { x = board[i][j].posizione.x, y = board[i][j].posizione.y })
+    for i, row in ipairs(board) do
+        for j, value in ipairs(row)do
+            if type(value) == "table" or value == "S" then
+                table.insert(sempaiList, { x = i, y = j })
             end
         end
     end
@@ -67,9 +66,6 @@ local function findNearestObject(sempai, objects)
             if dist < minDistance then
                 minDistance = dist
                 nearestObject = other
-            else
-                minDistance = minDistance
-                nearestObject = nearestObject
             end
         elseif dist == 0 then
             minDistance = minDistance
