@@ -4,9 +4,9 @@ local utility_function = require("utility.utility")
 --Funzione che rimuove un sempai dalla scacchiera
 local function deleteSempai (board, sempai)
 
-    local newBoard = utility_function.clone(board)
+    local newBoard = utility_function.deepCopy(board)
 
-    local newSempai = utility_function.clone(sempai)
+    local newSempai = utility_function.deepCopy(sempai)
 
     local x = newSempai.posizione.x
     local y = newSempai.posizione.y
@@ -33,8 +33,8 @@ local function calculatePriority (sempai1, sempai2)
     local priority1 = priority(sempai1)
     local priority2 = priority(sempai2)
 
-    local newSempai1 = utility_function.clone(sempai1)
-    local newSempai2 = utility_function.clone(sempai2)
+    local newSempai1 = utility_function.deepCopy(sempai1)
+    local newSempai2 = utility_function.deepCopy(sempai2)
 
     if priority1 > priority2 then
         return newSempai1
@@ -47,10 +47,10 @@ end
 
 local function war (board, sempai1, sempai2)
 
-    local newBoard = utility_function.clone(board)
+    local newBoard = utility_function.deepCopy(board)
 
-    local newSempai1 = utility_function.clone(sempai1)
-    local newSempai2 = utility_function.clone(sempai2)
+    local newSempai1 = utility_function.deepCopy(sempai1)
+    local newSempai2 = utility_function.deepCopy(sempai2)
 
     if newSempai1.umilta > newSempai2.umilta then
         newSempai1.umilta = newSempai1.umilta + 1

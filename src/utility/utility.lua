@@ -1,15 +1,15 @@
 --Funzione che serve per clonare in profondità la scacchiera
-local function clone(t)
+local function deepCopy(orig)
     local new_table
 
-    if type(t) == 'table' then
+    if type(orig) == 'table' then
         new_table = {}
 
-        for k, v in pairs(t) do
-            new_table[clone(k)] = clone(v)
+        for k, v in pairs(orig) do
+            new_table[deepCopy(k)] = deepCopy(v)
         end
     else
-        new_table = t
+        new_table = orig
     end
 
     return new_table
@@ -59,8 +59,8 @@ local function findNearestObject(sempai, objects)
     local nearestObject
     local minDistance = math.huge
 
-    for i = 1, #objects do
-        local other = objects[i]
+    for _, object in ipairs(objects) do
+        local other = object
 
         local dist = calculateDistance(other.x, other.y, sempai.x, sempai.y)
         if dist > 0 then
@@ -98,9 +98,8 @@ local function minPath(startX, startY, endX, endY)
     return direction
 end
 
-
 local U = {
-    clone = clone,
+    deepCopy = deepCopy,
     getSempai = getSempai,
     getObjectList = getObjectList,
     findNearestObject = findNearestObject,

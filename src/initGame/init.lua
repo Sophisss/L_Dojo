@@ -30,7 +30,7 @@ end
 --Funzione che inserisce i simboli nella scacchiera
 local function insert(D, board)
 
-    local newBoard = utility_function.clone(board)
+    local newBoard = utility_function.deepCopy(board)
 
     for symbol, position in pairs(D) do
         for  _, coords in ipairs(position) do

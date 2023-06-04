@@ -4,10 +4,10 @@ local war_function = require("sempai.war")
 local function moveSempai(board, x, y, dx, dy)
 
     --Clona la tabella
-    local newBoard = utility_function.clone(board)
+    local newBoard = utility_function.deepCopy(board)
 
     --Clona il sempai
-    local newSempai = utility_function.clone(newBoard[x][y])
+    local newSempai = utility_function.deepCopy(newBoard[x][y])
 
     --Determina le nuove coordinate
     local newX = x + dx
@@ -28,7 +28,7 @@ local function moveSempai(board, x, y, dx, dy)
                 newSempai.gentilezza = newSempai.gentilezza + 1
             else
                 --Clono il sempai trovato
-                local otherSempai = utility_function.clone(newBoard[newX][newY])
+                local otherSempai = utility_function.deepCopy(newBoard[newX][newY])
 
                 --Guerra tra i due sempai
                 newBoard, newSempai = war_function.war(newBoard, newSempai, otherSempai)
