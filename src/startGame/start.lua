@@ -1,17 +1,7 @@
 local utility_function = require("utility.utility")
 local sempai_function = require("sempai.movements")
 local file_function = require("file.file")
-
-local function printSempai (board)
-
-    for _, row in ipairs(board) do
-        for _, value in ipairs(row) do
-            if type(value) == "table" then
-                sempai_function.printSempai(value)
-            end
-        end
-    end
-end
+local print_function = require("utility.printFile")
 
 local function moveAllSempaiTowardsNearestObject(board)
     local newBoard = utility_function.deepCopy(board)
@@ -52,7 +42,7 @@ local function startGame(board)
     local finalResult
 
     if #listSempai > 1 then
-        printSempai(newBoard)
+        print_function.printConsole(newBoard)
         print("\n--------------")
 
         newBoard = moveAllSempaiTowardsNearestObject(newBoard)
@@ -61,7 +51,7 @@ local function startGame(board)
         finalResult = startGame(newBoard)
 
     elseif #listSempai == 1 then
-        printSempai(newBoard)
+        print_function.printConsole(newBoard)
         print("\n--------------")
         finalResult = true
     else

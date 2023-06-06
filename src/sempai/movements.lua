@@ -60,18 +60,8 @@ local function moveSempai(board, x, y, dx, dy)
     return newBoard
 end
 
-local function printSempai(sempai)
-    print("Coraggio: " .. sempai.coraggio ..
-            "\nRispetto: " .. sempai.rispetto ..
-            "\nGentilezza: " .. sempai.gentilezza ..
-            "\nUmilta': " .. sempai.umilta ..
-            "\nPosizione: {" .. sempai.posizione.x .. "," .. sempai.posizione.y .. "}" ..
-            "\nSomma valori: " .. sempai.umilta + sempai.coraggio + sempai.rispetto + sempai.gentilezza .. "\n")
-end
-
 local M = {
-    moveSempai = moveSempai,
-    printSempai = printSempai
+    moveSempai = moveSempai
 }
 
 return M
